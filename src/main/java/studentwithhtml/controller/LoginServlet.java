@@ -5,6 +5,7 @@ import java.io.PrintWriter;
 import java.util.List;
 
 import javax.servlet.GenericServlet;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
@@ -21,8 +22,6 @@ public class LoginServlet extends HttpServlet{
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		String email=req.getParameter("email");
 		String password=req.getParameter("password");
-		
-		
 		StudentDao dao=new StudentDao();
 		List<Student> students=dao.getAllStudents();
 		boolean value=false;
@@ -32,23 +31,21 @@ public class LoginServlet extends HttpServlet{
 				value=true;
 				dbPassword=student.getPassword();
 				break;
-			}
+				}
 		}
 		if(value) {
 //			value =true email is present in the database
 			if(password.equals(dbPassword)) {
 //				password matches then it is login Success
-				PrintWriter printWriter=resp.getWriter();
-				printWriter.print("Login Success");
+				resp.sendRedirect("https://www.javatpoint.com");
 			}else {
-				PrintWriter printWriter=resp.getWriter();
-				printWriter.print("Invalid Password");
+				RequestDispatcher dispatcher=req.getRequestDispatcher("login.html");
+				dispatcher.include(req, resp);
 			}
-			
 		}else {
 //			value=false
-			PrintWriter printWriter=resp.getWriter();
-			printWriter.print("Sorry Invalid Email");
+			RequestDispatcher dispatcher=req.getRequestDispatcher("login.html");
+			dispatcher.include(req, resp);
 		}
 	}
 }
